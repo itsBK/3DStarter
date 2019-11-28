@@ -1,0 +1,5 @@
+<root>
+    <item name='java.io.File java.lang.String getAbsolutePath()'>
+        <annotation name='org.jetbrains.annotations.NotNull' />
+    </item>
+</root>
