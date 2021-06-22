@@ -8,14 +8,10 @@ import framework.gl.camera.LookAtCamera;
 import framework.gl.vertices.Vertices3;
 import framework.input.Input;
 
-
 import static javax.microedition.khronos.opengles.GL10.GL_COLOR_BUFFER_BIT;
 import static javax.microedition.khronos.opengles.GL10.GL_DEPTH_BUFFER_BIT;
 import static javax.microedition.khronos.opengles.GL10.GL_DEPTH_TEST;
-import static javax.microedition.khronos.opengles.GL10.GL_EXP;
 import static javax.microedition.khronos.opengles.GL10.GL_FOG;
-import static javax.microedition.khronos.opengles.GL10.GL_FOG_COLOR;
-import static javax.microedition.khronos.opengles.GL10.GL_FOG_DENSITY;
 import static javax.microedition.khronos.opengles.GL10.GL_FOG_END;
 import static javax.microedition.khronos.opengles.GL10.GL_FOG_MODE;
 import static javax.microedition.khronos.opengles.GL10.GL_FOG_START;
@@ -25,17 +21,17 @@ import static javax.microedition.khronos.opengles.GL10.GL_LINE_STRIP;
 import static javax.microedition.khronos.opengles.GL10.GL_POINTS;
 
 
-public class GoldenRatioDistribution3D extends Game {
+public class HalfSphereDistribution3D extends Game {
 
     @Override
     public Screen getStartScreen() {
-        return new GoldenRatioScreen(this);
+        return new HalfSphereScreen(this);
     }
 
 
 
 
-    class GoldenRatioScreen extends Screen {
+    class HalfSphereScreen extends Screen {
 
         private static final int MAX_POINTS = 1000;
 
@@ -55,7 +51,7 @@ public class GoldenRatioDistribution3D extends Game {
         int primitiveType = GL_POINTS;
 
 
-        GoldenRatioScreen(Game game) {
+        HalfSphereScreen(Game game) {
             super(game);
             coordinates = new float[7 * MAX_POINTS];
 
@@ -84,10 +80,11 @@ public class GoldenRatioDistribution3D extends Game {
             for (int i = 0; i < numPoints; i++) {
                 float inclination = (float) Math.acos(1 - 2 * i / (float) numPoints);
                 float azimuth = angleIncrement * i;
+                if ((float) Math.cos(inclination) < 0) continue;
 
                 coordinates[j++] = (float) (Math.sin(inclination) * Math.cos(azimuth));
-                coordinates[j++] = (float) (Math.sin(inclination) * Math.sin(azimuth));
                 coordinates[j++] = (float) Math.cos(inclination);
+                coordinates[j++] = (float) (Math.sin(inclination) * Math.sin(azimuth));
 
                 coordinates[j++] = 1f;
                 coordinates[j++] = 1f;

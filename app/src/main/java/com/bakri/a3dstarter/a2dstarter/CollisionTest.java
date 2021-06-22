@@ -107,6 +107,7 @@ public class CollisionTest extends Game {
 
         @Override
         public void update(float deltaTime) {
+            deltaTime /= 5;
             List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
             game.getInput().getKeyEvents();
 
@@ -148,6 +149,7 @@ public class CollisionTest extends Game {
 
         @Override
         public void present(float deltaTime) {
+
             GL10 gl = graphics.getGL();
 
             gl.glViewport(0, 0, graphics.getWidth(), graphics.getHeight());

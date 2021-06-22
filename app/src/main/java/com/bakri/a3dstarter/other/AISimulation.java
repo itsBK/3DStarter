@@ -69,11 +69,15 @@ public class AISimulation extends Game {
                     if (x < 0.1f * width && y < 0.1f * height) {
                         boids2D.avoidance = !boids2D.avoidance;
 
+                        System.out.println("avoidance");
+
                     } else if (x > 0.9f * width && y < 0.1f * height) {
                         boids2D.alignment = !boids2D.alignment;
+                        System.out.println("alignment");
 
                     } else if (x < 0.1f * width && y > 0.9f * height) {
                         boids2D.cohesion = !boids2D.cohesion;
+                        System.out.println("cohesion");
 
                     } else if (x > 0.9f * width && y > 0.9f * height) {
                         boids2D.avoidance = boids2D.alignment = boids2D.cohesion = false;

@@ -7,15 +7,12 @@ import framework.gl.Screen;
 import framework.gl.camera.LookAtCamera;
 import framework.gl.vertices.Vertices3;
 import framework.input.Input;
-
+import framework.math.Vector3;
 
 import static javax.microedition.khronos.opengles.GL10.GL_COLOR_BUFFER_BIT;
 import static javax.microedition.khronos.opengles.GL10.GL_DEPTH_BUFFER_BIT;
 import static javax.microedition.khronos.opengles.GL10.GL_DEPTH_TEST;
-import static javax.microedition.khronos.opengles.GL10.GL_EXP;
 import static javax.microedition.khronos.opengles.GL10.GL_FOG;
-import static javax.microedition.khronos.opengles.GL10.GL_FOG_COLOR;
-import static javax.microedition.khronos.opengles.GL10.GL_FOG_DENSITY;
 import static javax.microedition.khronos.opengles.GL10.GL_FOG_END;
 import static javax.microedition.khronos.opengles.GL10.GL_FOG_MODE;
 import static javax.microedition.khronos.opengles.GL10.GL_FOG_START;
@@ -25,19 +22,19 @@ import static javax.microedition.khronos.opengles.GL10.GL_LINE_STRIP;
 import static javax.microedition.khronos.opengles.GL10.GL_POINTS;
 
 
-public class GoldenRatioDistribution3D extends Game {
+public class ConeDistribution extends Game {
 
     @Override
     public Screen getStartScreen() {
-        return new GoldenRatioScreen(this);
+        return new ConeScreen(this);
     }
 
 
 
 
-    class GoldenRatioScreen extends Screen {
+    class ConeScreen extends Screen {
 
-        private static final int MAX_POINTS = 1000;
+        private static final int MAX_POINTS = 300;
 
         Vertices3 vertices;
         LookAtCamera camera;
@@ -49,23 +46,81 @@ public class GoldenRatioDistribution3D extends Game {
 
         float goldenRatio = (1 + (float) Math.sqrt(5)) / 2;
         float angleIncrement = 2 * (float) Math.PI * goldenRatio;
+        Vector3 range;
+        Vector3 direction;
+        float distance;
+        float x, y, z;
 
-        int numPoints = 0;
+        int totalNumOfPoints;
         int j = 0;
-        int primitiveType = GL_POINTS;
+        int primitiveType = GL_LINES;
 
 
-        GoldenRatioScreen(Game game) {
+        ConeScreen(Game game) {
             super(game);
-            coordinates = new float[7 * MAX_POINTS];
+            coordinates = new float[2 * 7 * MAX_POINTS];
+            range = new Vector3(1f,0.3f,0).nor();
+            direction = new Vector3(1, 0f, 0).nor();
+            distance = range.distSquared(direction);
 
             vertices = new Vertices3(graphics, coordinates.length / 7, 0,
                     true, false, false);
 
             float ratio = graphics.getWidth() / (float) graphics.getHeight();
             camera = new LookAtCamera(67, ratio, 0.1f, 20f);
-            camera.getPosition().set(0, 0, 2);
+            camera.getPosition().set(0, 0, 2f);
             camera.getLookAt().set(0, 0, 0);
+
+            totalNumOfPoints = MAX_POINTS;
+            int numPoints = 0;
+            double sin;
+
+            long startTime = System.nanoTime();
+            for (int k = 0; k < 2; k++) {
+                for (int i = 0; i < totalNumOfPoints; i++) {
+                    double inclination = Math.acos(1 - 2 * i / (float) totalNumOfPoints);
+                    float azimuth = angleIncrement * i;
+
+                    sin = Math.sin(inclination);
+                    x = (float) (sin * Math.cos(azimuth));
+                    y = (float) (sin * Math.sin(azimuth));
+                    z = (float) Math.cos(inclination);
+
+                    if (direction.distSquared(x, y, z) <= distance) {
+                        numPoints++;
+
+                        if (k == 1) {
+                            coordinates[j++] = 0;
+                            coordinates[j++] = 0;
+                            coordinates[j++] = 0;
+                            coordinates[j++] = 0f;
+                            coordinates[j++] = 1f;
+                            coordinates[j++] = 0f;
+                            coordinates[j++] = 1f;
+
+                            coordinates[j++] = x;
+                            coordinates[j++] = y;
+                            coordinates[j++] = z;
+                            coordinates[j++] = 0f;
+                            coordinates[j++] = 1f;
+                            coordinates[j++] = 0f;
+                            coordinates[j++] = 1f;
+                        }
+                    }
+                }
+
+                if (numPoints < MAX_POINTS * 9 / 10 && k == 0) {
+                    int q = (int) (0.98f * totalNumOfPoints / (numPoints + 1));
+                    totalNumOfPoints *= q;
+                    System.out.println("multiplied by: " + q);
+                    j = 0;
+                }
+            }
+            float deltaTime = (System.nanoTime() - startTime) / 1000000000.0f;
+            System.out.println("Total Points needed: " + totalNumOfPoints);
+            System.out.println("Total Points Rendered: " + numPoints);
+            System.out.println("Total time needed: " + deltaTime);
+            vertices.setVertices(coordinates);
         }
 
         @Override
@@ -75,39 +130,6 @@ public class GoldenRatioDistribution3D extends Game {
 
         @Override
         public void update(float deltaTime) {
-            j = 0;
-            if (numPoints < MAX_POINTS)
-                numPoints += 5;
-            if (numPoints > MAX_POINTS)
-                numPoints = MAX_POINTS;
-
-            for (int i = 0; i < numPoints; i++) {
-                float inclination = (float) Math.acos(1 - 2 * i / (float) numPoints);
-                float azimuth = angleIncrement * i;
-
-                coordinates[j++] = (float) (Math.sin(inclination) * Math.cos(azimuth));
-                coordinates[j++] = (float) (Math.sin(inclination) * Math.sin(azimuth));
-                coordinates[j++] = (float) Math.cos(inclination);
-
-                coordinates[j++] = 1f;
-                coordinates[j++] = 1f;
-                coordinates[j++] = 1f;
-                /*
-                if ((i + 1) % 8 == 0) {
-                    coordinates[j++] = 0.44f;
-                    coordinates[j++] = 0.07f;
-                    coordinates[j++] = 0.99f;
-                } else {
-                    coordinates[j++] = 1.0f;
-                    coordinates[j++] = 0.45f;
-                    coordinates[j++] = 0.65f;
-                }
-                 */
-                coordinates[j++] = 1;
-            }
-            vertices.setVertices(coordinates);
-
-
             Input input = game.getInput();
             if (input.isTouchDown(0)) {
 
@@ -127,7 +149,7 @@ public class GoldenRatioDistribution3D extends Game {
                     primitiveType = GL_POINTS;
 
                 } else if (x > 9.0f * width / 10 && y > 9.0f * height / 10) {
-                    numPoints = 0;
+                    totalNumOfPoints = 0;
                     coordinates = new float[7 * MAX_POINTS];
                 }
 
@@ -135,7 +157,7 @@ public class GoldenRatioDistribution3D extends Game {
                     lastX = x;
                     lastY = y;
                 } else {
-                    lastAngle += (x - lastX) / 5;
+                    lastAngle += (x - lastX) / 5f;
                     lastX = x;
                     lastY = y;
                 }

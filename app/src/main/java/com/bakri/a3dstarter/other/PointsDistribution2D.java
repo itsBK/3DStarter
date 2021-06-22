@@ -27,13 +27,13 @@ public class PointsDistribution2D extends Game {
 
     class PointsDistribution2DScreen extends Screen {
 
-        private static final int NUM_POINTS = 1000;
+        private static final int NUM_POINTS = 500;
 
         Vertices vertices;
         Camera2D camera;
 
         float[] coordinates;
-        float turnFraction = 1.0f;
+        float turnFraction = (float) (1 + Math.sqrt(5)) / 2;
         float increment;
         int j = 0;
         int primitiveType = GL_POINTS;
@@ -48,29 +48,12 @@ public class PointsDistribution2D extends Game {
                     true, false);
 
             float ratio = graphics.getWidth() / (float) graphics.getHeight();
-            camera = new Camera2D(graphics, 6.4f * ratio, 6.4f);
+            camera = new Camera2D(graphics, 2.2f * ratio, 2.2f);
             camera.getPosition().set(0, 0);
-        }
-
-        @Override
-        public void resume() {
-            graphics.getGL().glViewport(0, 0, graphics.getWidth(), graphics.getHeight());
-        }
-
-        @Override
-        public void update(float deltaTime) {
-            if (turnFraction <= 1.15) {
-                increment += deltaTime * 60.0f * 0.0000001f;
-                turnFraction += increment;
-            }
-            else {
-                turnFraction += deltaTime * 60.0f * 0.00005f;
-            }
 
             j = 0;
-
             for (int i = 0; i < NUM_POINTS; i++) {
-                float dst = (float) Math.pow(i / (NUM_POINTS - 1f), -0.7f);
+                float dst = (float) Math.sqrt(i / (NUM_POINTS - 1f));
                 float angle = 2 * (float) Math.PI * turnFraction * i;
 
                 float x = dst * (float) Math.cos(angle);
@@ -83,12 +66,18 @@ public class PointsDistribution2D extends Game {
                 coordinates[j++] = 0.45f;
                 coordinates[j++] = 0.65f;
                 coordinates[j++] = 1;
-
             }
 
             vertices.setVertices(coordinates);
+        }
 
+        @Override
+        public void resume() {
+            graphics.getGL().glViewport(0, 0, graphics.getWidth(), graphics.getHeight());
+        }
 
+        @Override
+        public void update(float deltaTime) {
             Input input = game.getInput();
             if (input.isTouchDown(0)) {
 

@@ -50,7 +50,7 @@ public class ObjLoaderTest extends Game {
             if (lines >= vertices.getNumIndices()) {
                 lines = vertices.getNumIndices();
             } else {
-                lines += 3;
+                lines += 6;
             }
         }
 

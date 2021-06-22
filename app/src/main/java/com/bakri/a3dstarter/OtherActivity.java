@@ -10,7 +10,9 @@ import android.widget.ListView;
 public class OtherActivity extends ListActivity {
 
     String[] tests = {"Terrain2D", "MarchingCubes", "Terrain3D", "AISimulation",
-                      "PointsDistribution2D", "PointsDistribution3D", "GoldenRatioDistribution3D"
+                      "PointsDistribution2D", "PointsDistribution3D", "GoldenRatioDistribution3D",
+                      "ConeDistribution", "ConeRays", "CylinderRays", "PyramidRays",
+                      "HalfSphereDistribution3D"
     };
 
 

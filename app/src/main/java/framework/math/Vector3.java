@@ -4,6 +4,9 @@ import android.opengl.Matrix;
 
 public class Vector3 {
 
+    public static float TO_RADIANS = (1 / 180.0f) * (float) Math.PI;
+    public static float TO_DEGREES = (1 / (float) Math.PI) * 180.0f;
+
     public float x, y, z;
 
     private static final float[] matrix = new float[16];
@@ -90,6 +93,17 @@ public class Vector3 {
             this.z /= len;
         }
         return this;
+    }
+
+    public float dotProduct(Vector3 other) {
+        return this.x * other.x + this.y * other.y + this.z * other.z;
+    }
+
+    public Vector3 crossProduct(Vector3 other) {
+        return new Vector3(
+                this.y * other.z - this.z * other.y,
+                this.z * other.x - this.x * other.z,
+                this.x * other.y - this.y * other.x);
     }
 
     public Vector3 rotate(float angle, float axisX, float axisY, float axisZ) {
