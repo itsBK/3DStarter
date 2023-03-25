@@ -56,8 +56,8 @@ public class PyramidRays extends Game {
 
             float ratio = graphics.getWidth() / (float) graphics.getHeight();
             camera = new LookAtCamera(77, ratio, 0.1f, 20f);
-            camera.getPosition().set(0, 0, 4);
-            camera.getLookAt().set(0, 0, 0);
+            camera.getPosition().set(2, 0, 3);
+            camera.getLookAt().set(2, 0, 0);
 
             origin = new Vector3(0, 0, 0);
             opening = new Vector3(1f,0.5f,0f).nor();
@@ -205,7 +205,6 @@ public class PyramidRays extends Game {
         public void present(float deltaTime) {
             GL10 gl = graphics.getGL();
             gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            gl.glClearColor(0.5f, 0.5f, 0.5f, 0.3f);
             camera.setMatrices(gl);
 
             gl.glEnable(GL_DEPTH_TEST);

@@ -59,8 +59,8 @@ public class ConeRays extends Game {
 
             float ratio = graphics.getWidth() / (float) graphics.getHeight();
             camera = new LookAtCamera(77, ratio, 0.1f, 20f);
-            camera.getPosition().set(0, 0, 7);
-            camera.getLookAt().set(0, 0, 0);
+            camera.getPosition().set(2, 0, 3);
+            camera.getLookAt().set(2, 0, 0);
 
             origin = new Vector3(0, 0, 0);
             opening = new Vector3(1f,0.3f,0).nor();

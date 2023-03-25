@@ -143,6 +143,9 @@
         <activity android:name=".other.HalfSphereDistribution3D"
             android:screenOrientation="landscape"
             android:configChanges="orientation|keyboard|keyboardHidden" />
+        <activity android:name=".other.CubeWave"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|keyboard|keyboardHidden" />
 
     </application>
 

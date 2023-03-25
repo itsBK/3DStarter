@@ -51,8 +51,6 @@ public class Boids2D {
     public void update(float deltaTime) {
         int len;
 
-
-
         //calculate forces
         for (int i = 0; i < numBoids; i++) {
             current = boids.get(i);

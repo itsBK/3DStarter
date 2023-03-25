@@ -73,7 +73,7 @@ public class Terrain3D extends Game {
             super(game);
 
             blocks = new int[zCount][yCount][xCount][8];
-            intializeBlocks(blocks, 0, 50, new Random().nextInt(2000000), 0.1f);
+            initializeBlocks(blocks, 0, 50, new Random().nextInt(2000000), 0.1f);
             vertices = intializeVertices(blocks);
             blocksToVertices(vertices, blocks, surfaceLevel);
 
@@ -176,9 +176,9 @@ public class Terrain3D extends Game {
 
 
 
-        private void intializeBlocks(int[][][][] blocks,
-                                     int startValue, int endValue,
-                                     int seed, float increment) {
+        private void initializeBlocks(int[][][][] blocks,
+                                      int startValue, int endValue,
+                                      int seed, float increment) {
 
             OpenSimplexNoise noise = new OpenSimplexNoise(seed);
             int[][][] points =  new int [blocks.length + 1]
